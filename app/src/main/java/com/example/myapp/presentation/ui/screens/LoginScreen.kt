@@ -1,6 +1,3 @@
-package com.example.myapp.proyecto
-
-
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -24,6 +21,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -31,26 +30,41 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import com.example.myapp.presentation.navigation.Screen
+import com.example.myfirstapp.proyecto.presentation.viewmodel.LoginScreenViewModel
+
 
 @Composable
-fun Login(){
-    var text by remember { mutableStateOf("") }
-    var passwordVisible by remember{mutableStateOf(false)}
-    var password by remember{mutableStateOf("")}
+fun LoginScreen(navController: NavController,
+                loginScreenViewModel: LoginScreenViewModel = viewModel()){
+    val username by loginScreenViewModel.username.collectAsState()
+    val password by loginScreenViewModel.password.collectAsState()
+    val passwordVisible by loginScreenViewModel.passwordVisible.collectAsState()
+    val loginEnabled by remember{
+        derivedStateOf {
+            username.isNotBlank()&& password.isNotBlank()
+        }
+    }
     val colorFondo = Color(0xFFF1E2D3)
     val colorBoton=Color(0xFFD37A56)
     val colorText=Color(0xFF3C3C3C)
+
 
     Scaffold (containerColor = colorFondo) { innerPadding->
         Column(modifier = Modifier.padding(innerPadding)
             .fillMaxSize(),
             horizontalAlignment=Alignment.CenterHorizontally,
+
 
             ){
             Row (modifier = Modifier.padding(18.dp)
@@ -65,9 +79,11 @@ fun Login(){
             Row (modifier=Modifier.padding(18.dp)){
                 TextField(
                     modifier= Modifier.background(colorText),
-                    value=text,
-                    onValueChange = {newText-> text=newText},
+                    value=username,
+                    onValueChange = {loginScreenViewModel.setUsername(it)},
                     label={Text("Nombre de usuario")}
+
+
 
 
                 )
@@ -76,38 +92,37 @@ fun Login(){
                 TextField(
                     modifier= Modifier.background(colorText),
                     value = password,
-                    onValueChange = { newPassword -> password = newPassword },
+                    onValueChange = { loginScreenViewModel.setPassword(it) },
                     label = { Text("Contraseña") },
                     visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                     trailingIcon={
                         val image= if(passwordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff
-                        IconButton(onClick={passwordVisible=!passwordVisible}){
+                        IconButton(onClick={loginScreenViewModel.setPasswordVisible()}){
                             Icon(imageVector=image,contentDescription=null)
                         }
                     }
                 )
 
+
             }
             Row (modifier=Modifier.padding(18.dp),
                 horizontalArrangement = Arrangement.SpaceBetween){
-                Button(onClick={println("Botón presionado") },
+                Button(onClick={navController.navigate(Screen.Restaurant.route) },
                     colors= ButtonDefaults.buttonColors(
                         containerColor=colorBoton
                     ),
-
                     shape=RoundedCornerShape(50)){
                     Text("Aceptar")
                 }
                 Button(
-                    onClick={ text=" "
-                        password=" "},
+                    onClick={ loginScreenViewModel.clear()},
                     colors= ButtonDefaults.buttonColors(
                         containerColor=colorBoton
                     ),
                     shape=RoundedCornerShape(50)){
                     Text("Limpiar")
                 }
-                Button(onClick={println("Botón presionado")},
+                Button(onClick={navController.navigate(Screen.Register.route)},
                     colors= ButtonDefaults.buttonColors(
                         containerColor=colorBoton
                     ),
@@ -123,9 +138,8 @@ fun Login(){
 }
 
 
-
 @Preview
 @Composable
 fun previewLogin(){
-    Login()
+    LoginScreen(rememberNavController())
 }
