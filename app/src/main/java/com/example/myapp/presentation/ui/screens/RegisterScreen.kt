@@ -44,8 +44,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.myapp.R
+import com.example.myfirstapp.proyecto.presentation.navigation.Screen
 
-import com.example.myapp.presentation.navigation.Screen
+
 import com.example.myfirstapp.proyecto.presentation.viewmodel.RegistroScreenViewModel
 
 

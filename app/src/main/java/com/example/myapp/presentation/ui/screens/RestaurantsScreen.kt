@@ -1,5 +1,4 @@
-package com.example.myfirstapp.proyecto.presentation.ui.screens
-
+package com.example.myapp.proyecto.presentation.ui.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -30,37 +29,54 @@ import androidx.navigation.compose.rememberNavController
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.ExpandLess
+import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.IconButton
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 
 
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.example.myapp.presentation.ui.components.MenuAcciones
-import com.example.myapp.presentation.navigation.Screen
+import com.example.myapp.domain.model.Restaurant
+import com.example.myfirstapp.proyecto.presentation.navigation.Screen
+import com.example.myfirstapp.proyecto.presentation.ui.screens.MenuAcciones
+
 import com.example.myfirstapp.proyecto.presentation.viewmodel.RestaurantScreenViewModel
-import kotlin.coroutines.coroutineContext
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RestaurantScreen(navController: NavController,
-                     restaurantScreenViewModel: RestaurantScreenViewModel= viewModel()){
-    val restaurantCards by restaurantScreenViewModel.restaurantCards.collectAsState()
+                     restaurantScreenViewModel: RestaurantScreenViewModel = viewModel()){
+    val restaurants by restaurantScreenViewModel.restaurant.collectAsState()
+
+    val colorFondo = Color(0xFFF1E2D3)
+    val colorButton = Color(0xFFD37A56)
 
 
     Scaffold (
+        containerColor = colorFondo,
+
         topBar = {
             MenuAcciones("Restaurantes",navController)
         },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = {navController.navigate(Screen.AddRestaurant.route)}) {
+                onClick = {navController.navigate(Screen.AddRestaurant.route)},
+                contentColor = colorButton
+            ) {
                 Icon(
                     imageVector = Icons.Default.Add,
                     contentDescription = "Añadir"
@@ -70,49 +86,104 @@ fun RestaurantScreen(navController: NavController,
     ) {innerPadding->
         LazyColumn (modifier = Modifier.padding(innerPadding)
             .fillMaxSize()){
-            items(restaurantCards, key = {it.restaurant.id}){restaurantCard->
-                Card(modifier = Modifier.fillMaxWidth()
-                    .padding(8.dp),
-                    onClick = {restaurantScreenViewModel.selected(restaurantCard.restaurant.id)})
-                {
-                    Row (verticalAlignment = Alignment.CenterVertically){
-                        if(restaurantCard.expanded){
-                            Icon(
-                                imageVector = Icons.Default.KeyboardArrowDown,
-                                contentDescription = "Expandido",
-                                modifier= Modifier.align (Alignment.Top)
-                            )
-                            Column {
-                                Text(restaurantCard.restaurant.name)
-                                Spacer(modifier = Modifier.height(4.dp))
-                                Text("Tipo: ${restaurantCard.restaurant.type}")
-                                Spacer(modifier = Modifier.height(4.dp))
-                                Text("Puntos: ${restaurantCard.restaurant.point}")
+            items(restaurants){ restaurant->
+                key (restaurants){
+                    RestaurantCard(restaurant=restaurant,restaurantScreenViewModel=restaurantScreenViewModel,navController=navController)
 
-
-
-                            }
-                        }else{
-                            Row (verticalAlignment = Alignment.CenterVertically){
-                                Icon(
-                                    imageVector = Icons.Default.KeyboardArrowUp,
-                                    contentDescription = "Contraido"
-
-
-                                )
-                                Text(restaurantCard.restaurant.name)
-                            }
-                        }
-                    }
                 }
 
 
             }
         }
-
-
+        Button(
+            colors = ButtonDefaults.buttonColors(
+                containerColor = colorButton
+            ),
+            onClick = {
+                navController.popBackStack()
+            }
+        ) { Text("Atrás")}
     }
 }
+
+
+@Composable
+fun RestaurantCard(restaurant: Restaurant, restaurantScreenViewModel: RestaurantScreenViewModel,navController: NavController){
+    var expanded by remember{mutableStateOf(false)}
+    var showDialog by remember { mutableStateOf(false) }
+    val colorButton = Color(0xFFD37A56)
+
+    if(showDialog){
+        AlertDialog(
+            onDismissRequest = { showDialog = false },
+            title = { Text(text = "Eliminar un Restaurante") },
+            text = { Text("¿Deseas eliminar el restaurante?") },
+            confirmButton = {
+                Button(onClick = { showDialog = false }) {
+                    Text("Aceptar")
+                }
+            },
+            dismissButton = {
+                Button(onClick = { showDialog = false }) {
+                    Text("Cancelar")
+                }
+            }
+        )
+    }
+    Card(
+        modifier=Modifier.fillMaxWidth(),
+        onClick = {expanded=!expanded}
+    ){
+        Column {
+            if(!expanded){
+                Row (verticalAlignment = Alignment.CenterVertically){
+                    Icon(
+                        imageVector = Icons.Default.ExpandMore,
+                        contentDescription = "Expandir"
+                    )
+                    Text(restaurant.name)
+                }
+            }else{
+                Row (verticalAlignment = Alignment.CenterVertically){
+                    Icon(
+                        imageVector = Icons.Default.ExpandLess,
+                        contentDescription = "Contraer"
+                    )
+                    Text(restaurant.name)
+                }
+                Spacer(modifier=Modifier.height(16.dp))
+
+                Text("Tipo: ${restaurant.type}")
+
+                Spacer(modifier=Modifier.height(16.dp))
+
+                Text("Puntos: ${restaurant.point.toString()}")
+
+                Row(modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically){
+
+                    Spacer(modifier= Modifier.weight(1f))
+                    IconButton(onClick = {showDialog=true}) {
+                        Icon(
+                            tint = colorButton,
+                            imageVector = Icons.Default.Delete,
+                            contentDescription = "Eliminar"
+                        )
+                    }
+                    IconButton(onClick = {navController.navigate(Screen.UpdateRestaurant.route) }) {
+                        Icon(
+                            tint = colorButton,
+                            imageVector = Icons.Default.Edit,
+                            contentDescription = "Editar"
+                        )
+                    }
+                }
+
+            }
+        }
+    }
+}
+
 
 
 @Preview(showBackground = true)

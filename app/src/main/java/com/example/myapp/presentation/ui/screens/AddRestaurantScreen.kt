@@ -75,7 +75,9 @@ fun AddRestaurantScreen(navController: NavController,
             TextField(
                 modifier = Modifier.fillMaxWidth(),
                 value=restaurant.point.toString(),
-                onValueChange = {addRestaurantScreenViewModel.setPoint(it)},
+                onValueChange = {it.toDoubleOrNull()?.let{point->
+                    addRestaurantScreenViewModel.setPoint(point)
+                }},
                 label = {"Puntuación (0-5)"}
             )
             Spacer(modifier = Modifier.height(16.dp))

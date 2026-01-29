@@ -1,17 +1,18 @@
-package com.example.myapp.presentation.navigation
+package com.example.myfirstapp.proyecto.presentation.navigation
 
 sealed class Screen(val route :String){
-    data object Restaurant: Screen("Restaurante")
-
+    data object Restaurant: Screen("Página principal")
 
     data object Login:Screen("Login")
 
+    data object Register:Screen("Registro")
 
-    data object Register:Screen("Register")
+    data object AddRestaurant:Screen("Añadir")
 
+    data object MenuAcciones:Screen("Menú de acciones")
 
-    data object AddRestaurant:Screen("Add")
-
+    data object UpdateRestaurant: Screen("Update")
 
 
 }
+

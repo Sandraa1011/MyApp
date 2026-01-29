@@ -1,7 +1,4 @@
-package com.example.myapp.presentation.ui.components
-
-
-
+package com.example.myfirstapp.proyecto.presentation.ui.screens
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
@@ -19,14 +16,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.navigation.NavController
-import com.example.myapp.presentation.navigation.Screen
+import com.example.myfirstapp.proyecto.presentation.navigation.Screen
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MenuAcciones(title:String,navController: NavController){
     var expanded by remember{ mutableStateOf(false) }
-
 
     TopAppBar(
         title={Text(text = title)},
@@ -72,7 +68,6 @@ fun MenuAcciones(title:String,navController: NavController){
                         expanded = false
                     }
                 )
-
 
             }
         })
