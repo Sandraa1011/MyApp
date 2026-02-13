@@ -1,31 +1,33 @@
 package com.example.myfirstapp.proyecto.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.myapp.domain.model.Restaurant
+import com.example.myapp.domain.usecase.DeleteRestaurantsUseCase
+import com.example.myapp.domain.usecase.GetRestautantsUseCase
 
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
-class RestaurantScreenViewModel : ViewModel() {
-    private val _restaurant = MutableStateFlow<List<Restaurant>>(
-        listOf(
+class RestaurantScreenViewModel (
+    private val getRestautantsUseCase: GetRestautantsUseCase,
+    private val deleteRestaurantsUseCase: DeleteRestaurantsUseCase
+) : ViewModel(){
 
-            Restaurant(1, "Tagliatella", "Italiano", 4.3),
+    private var _restaurants= getRestautantsUseCase()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000),emptyList())
 
+    val restaurants: StateFlow<List<Restaurant>> = _restaurants
 
-            Restaurant(2, "Goiko", "Hamburguesería", 4.7),
-
-
-            Restaurant(3, "Jusco", "Japonés", 4.6),
-
-
-            Restaurant(4, "Wok", "Buffet libre", 4.4),
-
-
-            Restaurant(5, "Telepizza", "Pizzería", 3.7),
+    fun removeProduct(id:Long){
+        viewModelScope.launch {
+            deleteRestaurantsUseCase
+        }
+    }
 
 
-            )
-    )
-    val restaurant: StateFlow<List<Restaurant>> = _restaurant
+
 }

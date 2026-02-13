@@ -48,11 +48,13 @@ import com.example.myfirstapp.proyecto.presentation.navigation.Screen
 
 
 import com.example.myfirstapp.proyecto.presentation.viewmodel.RegistroScreenViewModel
+import org.koin.androidx.compose.koinViewModel
 
 
 @Composable
 fun RegisterScreen (navController: NavController,
-                    registroScreenViewModel: RegistroScreenViewModel = viewModel()) {
+                    registroScreenViewModel: RegistroScreenViewModel = koinViewModel ()
+) {
     val username by registroScreenViewModel.username.collectAsState()
     val password by registroScreenViewModel.password.collectAsState()
     val repeatPassword by registroScreenViewModel.repeatPassword.collectAsState()

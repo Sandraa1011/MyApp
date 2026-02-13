@@ -14,12 +14,15 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -28,25 +31,30 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.myfirstapp.proyecto.presentation.ui.screens.MenuAcciones
 import com.example.myfirstapp.proyecto.presentation.viewmodel.AddRestaurantScreenViewModel
+import org.koin.androidx.compose.koinViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddRestaurantScreen(navController: NavController,
-                        addRestaurantScreenViewModel: AddRestaurantScreenViewModel = viewModel()
+                        addRestaurantScreenViewModel: AddRestaurantScreenViewModel = koinViewModel()
 ){
     val restaurant by addRestaurantScreenViewModel.restaurant.collectAsState()
+    val snackbarHostState= remember { SnackbarHostState() }
     val colorFondo = Color(0xFFF1E2D3)
     val colorButton = Color(0xFFD37A56)
 
 
     Scaffold(
+        snackbarHost={SnackbarHost(snackbarHostState)},
+
         containerColor = colorFondo,
         topBar = {
-            TopAppBar(
-                title = { Text("Añadir Restaurantes") }
-            )
+
+            MenuAcciones("Añadir restaurante", navController)
+
         }
 
 
@@ -93,19 +101,22 @@ fun AddRestaurantScreen(navController: NavController,
                 ) {
                     Text("Cancelar")
 
-
                 }
 
-
+                Button(
+                    onClick = {
+                        addRestaurantScreenViewModel.save(navController, snackbarHostState )
+                    }
+                ) {
+                    Text("Aceptar")
+                }
             }
         }
     }
-
-
 }
 
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun PreviewAddRestaurant(){
     AddRestaurantScreen(rememberNavController())

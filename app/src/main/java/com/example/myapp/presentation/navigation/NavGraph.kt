@@ -13,7 +13,6 @@ import com.example.myfirstapp.proyecto.presentation.navigation.Screen
 import com.example.myfirstapp.proyecto.presentation.ui.screens.RegisterScreen
 
 
-
 @Composable
 fun NavGraph(startDestination: String = Screen.Login.route) {
     val navController = rememberNavController()
@@ -32,8 +31,9 @@ fun NavGraph(startDestination: String = Screen.Login.route) {
         composable(Screen.AddRestaurant.route) {
             AddRestaurantScreen(navController)
         }
-        composable(Screen.UpdateRestaurant.route) {
-            UpdateRestaurantScreen(navController)
+        composable(Screen.Update.route) {backStackEntry->
+            val id = backStackEntry.arguments?.getInt("id")
+            UpdateRestaurantScreen(navController,id)
         }
 
 

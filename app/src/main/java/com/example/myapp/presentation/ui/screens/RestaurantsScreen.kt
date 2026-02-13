@@ -54,13 +54,15 @@ import com.example.myfirstapp.proyecto.presentation.navigation.Screen
 import com.example.myfirstapp.proyecto.presentation.ui.screens.MenuAcciones
 
 import com.example.myfirstapp.proyecto.presentation.viewmodel.RestaurantScreenViewModel
+import org.koin.androidx.compose.koinViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RestaurantScreen(navController: NavController,
-                     restaurantScreenViewModel: RestaurantScreenViewModel = viewModel()){
-    val restaurants by restaurantScreenViewModel.restaurant.collectAsState()
+                     restaurantScreenViewModel: RestaurantScreenViewModel = koinViewModel ()
+){
+    val restaurants by restaurantScreenViewModel.restaurants.collectAsState()
 
     val colorFondo = Color(0xFFF1E2D3)
     val colorButton = Color(0xFFD37A56)
@@ -119,12 +121,18 @@ fun RestaurantCard(restaurant: Restaurant, restaurantScreenViewModel: Restaurant
             title = { Text(text = "Eliminar un Restaurante") },
             text = { Text("¿Deseas eliminar el restaurante?") },
             confirmButton = {
-                Button(onClick = { showDialog = false }) {
+                Button(onClick = { showDialog = false },
+                    colors= ButtonDefaults.buttonColors(
+                        containerColor=colorButton
+                    )) {
                     Text("Aceptar")
                 }
             },
             dismissButton = {
-                Button(onClick = { showDialog = false }) {
+                Button(onClick = { showDialog = false },
+                    colors= ButtonDefaults.buttonColors(
+                        containerColor=colorButton
+                    )) {
                     Text("Cancelar")
                 }
             }
@@ -170,7 +178,7 @@ fun RestaurantCard(restaurant: Restaurant, restaurantScreenViewModel: Restaurant
                             contentDescription = "Eliminar"
                         )
                     }
-                    IconButton(onClick = {navController.navigate(Screen.UpdateRestaurant.route) }) {
+                    IconButton(onClick = {navController.navigate(Screen.Update.createRoute(restaurant.id)) }) {
                         Icon(
                             tint = colorButton,
                             imageVector = Icons.Default.Edit,

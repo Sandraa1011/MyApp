@@ -43,11 +43,13 @@ import androidx.navigation.compose.rememberNavController
 import com.example.myfirstapp.proyecto.presentation.navigation.Screen
 
 import com.example.myfirstapp.proyecto.presentation.viewmodel.LoginScreenViewModel
+import org.koin.androidx.compose.koinViewModel
 
 
 @Composable
 fun LoginScreen(navController: NavController,
-                loginScreenViewModel: LoginScreenViewModel = viewModel()){
+                loginScreenViewModel: LoginScreenViewModel = koinViewModel ()
+){
     val username by loginScreenViewModel.username.collectAsState()
     val password by loginScreenViewModel.password.collectAsState()
     val passwordVisible by loginScreenViewModel.passwordVisible.collectAsState()

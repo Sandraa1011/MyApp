@@ -12,9 +12,6 @@ class RegistroScreenViewModel : ViewModel () {
     private val _text= MutableStateFlow("")
     val text: StateFlow<String> = _text
 
-
-
-
     // Estados de los campos
     private val _username = MutableStateFlow("")
     val username:  StateFlow<String> = _username

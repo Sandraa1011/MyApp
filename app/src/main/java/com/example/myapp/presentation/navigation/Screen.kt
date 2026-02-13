@@ -11,7 +11,10 @@ sealed class Screen(val route :String){
 
     data object MenuAcciones:Screen("Menú de acciones")
 
-    data object UpdateRestaurant: Screen("Update")
+    data object Update:Screen("update/{id}"){
+        fun createRoute(id: Long)="update/$id"
+    }
+
 
 
 }
