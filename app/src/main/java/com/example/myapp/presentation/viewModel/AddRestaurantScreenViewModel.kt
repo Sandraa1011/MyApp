@@ -11,36 +11,37 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class AddRestaurantScreenViewModel(val addRestaurantUseCase: AddRestaurantUseCase): ViewModel() {
+class AddRestaurantScreenViewModel(val addRestaurantUseCase: AddRestaurantUseCase) : ViewModel() {
 
 
     private val _restaurant = MutableStateFlow(
-        Restaurant(0, "", "", 0.0)
+        Restaurant("", "", "", 0.0)
     )
     val restaurant: StateFlow<Restaurant> = _restaurant
 
     fun setName(name: String) {
-        _restaurant.value = _restaurant.value.copy(name=name)
+        _restaurant.value = _restaurant.value.copy(name = name)
     }
 
     fun setType(type: String) {
-        _restaurant.value = _restaurant.value.copy(type=type)
+        _restaurant.value = _restaurant.value.copy(type = type)
     }
 
     fun setPoint(point: Double) {
-        _restaurant.value = _restaurant.value.copy(point=point)
-    }
-    fun clear() {
-        _restaurant.value = Restaurant(0,"","",0.0)
+        _restaurant.value = _restaurant.value.copy(point = point)
     }
 
-    fun save(navController: NavController,snackbarHostState: SnackbarHostState){
+    fun clear() {
+        _restaurant.value = Restaurant("", "", "", 0.0)
+    }
+
+    fun save(navController: NavController, snackbarHostState: SnackbarHostState) {
         viewModelScope.launch {
-            if(addRestaurantUseCase(restaurant.value)){
+            if (addRestaurantUseCase(restaurant.value)) {
                 navController.popBackStack()
 
-        }else{
-            snackbarHostState.showSnackbar("Error al guardar el restaurante")
+            } else {
+                snackbarHostState.showSnackbar("Error al guardar el restaurante")
             }
         }
     }

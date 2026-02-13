@@ -121,7 +121,8 @@ fun RestaurantCard(restaurant: Restaurant, restaurantScreenViewModel: Restaurant
             title = { Text(text = "Eliminar un Restaurante") },
             text = { Text("¿Deseas eliminar el restaurante?") },
             confirmButton = {
-                Button(onClick = { showDialog = false },
+                Button(onClick = {restaurantScreenViewModel.removeProduct(restaurant.id)
+                    showDialog = false },
                     colors= ButtonDefaults.buttonColors(
                         containerColor=colorButton
                     )) {

@@ -27,7 +27,7 @@ import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun UpdateRestaurantScreen(navController: NavController, id: Int?, updateScreenViewModel: UpdateScreenViewModel= koinViewModel ()) {
+fun UpdateRestaurantScreen(navController: NavController, id: String, updateScreenViewModel: UpdateScreenViewModel= koinViewModel ()) {
 
     val restaurant by updateScreenViewModel.restaurant.collectAsState();
     val snackbarHostState = remember { SnackbarHostState() }
@@ -68,5 +68,5 @@ fun UpdateRestaurantScreen(navController: NavController, id: Int?, updateScreenV
 @Composable
 @Preview
 fun PreviewUpdateScreen(){
-    UpdateRestaurantScreen(rememberNavController(),78544)
+    UpdateRestaurantScreen(rememberNavController(),"9234023")
 }

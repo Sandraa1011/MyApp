@@ -22,7 +22,7 @@ class RestaurantScreenViewModel (
 
     val restaurants: StateFlow<List<Restaurant>> = _restaurants
 
-    fun removeProduct(id:Long){
+    fun removeProduct(id:String){
         viewModelScope.launch {
             deleteRestaurantsUseCase
         }

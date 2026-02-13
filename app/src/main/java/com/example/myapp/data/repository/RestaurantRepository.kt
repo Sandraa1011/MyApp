@@ -12,9 +12,9 @@ class RestaurantRepository(val firestore: FirebaseFirestore) {
 
     private val restaurantsCollection = firestore.collection("restaurants")
 
-    suspend fun getById(id: Long): Restaurant? {
+    suspend fun getById(id: String): Restaurant? {
         return try {
-            val documentSnapshot = restaurantsCollection.document(id.toString()).get().await()
+            val documentSnapshot = restaurantsCollection.document(id).get().await()
             documentSnapshot.toObject(Restaurant::class.java)
         } catch (e: Exception) {
             e.printStackTrace()
@@ -31,7 +31,7 @@ class RestaurantRepository(val firestore: FirebaseFirestore) {
 
     suspend fun save(restaurant: Restaurant): Boolean {
         return try {
-            restaurantsCollection.add(restaurant.id.toString()).await()
+            restaurantsCollection.add(restaurant).await()
             true
         } catch (e: Exception) {
             e.printStackTrace()
@@ -39,10 +39,10 @@ class RestaurantRepository(val firestore: FirebaseFirestore) {
         }
     }
 
-    suspend fun delete(id: Long): Boolean {
+    suspend fun delete(id: String): Boolean {
         return try {
             // Agregamos .toString() aquí
-            restaurantsCollection.document(id.toString()).delete().await()
+            restaurantsCollection.document(id).delete().await()
             true
         } catch (e: Exception) {
             e.printStackTrace()

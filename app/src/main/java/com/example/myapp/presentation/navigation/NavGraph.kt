@@ -32,8 +32,9 @@ fun NavGraph(startDestination: String = Screen.Login.route) {
             AddRestaurantScreen(navController)
         }
         composable(Screen.Update.route) {backStackEntry->
-            val id = backStackEntry.arguments?.getInt("id")
+           backStackEntry.arguments?.getString("id")?.let{id->
             UpdateRestaurantScreen(navController,id)
+        }
         }
 
 

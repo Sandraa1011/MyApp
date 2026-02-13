@@ -20,7 +20,7 @@ class UpdateScreenViewModel (
     val updateRestaurantUseCase: UpdateRestaurantUseCase
 ): ViewModel() {
     private val _restaurant = MutableStateFlow(
-        Restaurant(0, "", "", 0.0)
+        Restaurant("", "", "", 0.0)
     )
     val restaurant: StateFlow<Restaurant> = _restaurant
 
@@ -43,7 +43,7 @@ class UpdateScreenViewModel (
         _restaurant.value = _restaurant.value.copy(point=point)
     }
     fun clear() {
-        _restaurant.value = Restaurant(0,"","",0.0)
+        _restaurant.value = Restaurant("","","",0.0)
     }
     fun update(navController: NavController,snackbarHostState: SnackbarHostState){
         viewModelScope.launch {
