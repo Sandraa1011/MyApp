@@ -106,7 +106,8 @@ fun AddRestaurantScreen(navController: NavController,
                 Button(
                     onClick = {
                         addRestaurantScreenViewModel.save(navController, snackbarHostState )
-                    }
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = colorButton)
                 ) {
                     Text("Aceptar")
                 }

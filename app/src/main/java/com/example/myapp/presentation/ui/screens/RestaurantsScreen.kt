@@ -140,12 +140,22 @@ fun RestaurantCard(restaurant: Restaurant, restaurantScreenViewModel: Restaurant
         )
     }
     Card(
-        modifier=Modifier.fillMaxWidth(),
-        onClick = {expanded=!expanded}
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 12.dp, vertical = 4.dp), // <--- Añade margen externo
+        onClick = { expanded = !expanded }
     ){
-        Column {
+        Column (
+            modifier = Modifier
+                .padding(12.dp) // <--- Añade margen interno para que el texto no toque los bordes
+                .fillMaxWidth()
+        ){
             if(!expanded){
-                Row (verticalAlignment = Alignment.CenterVertically){
+                Row (
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.height(32.dp)
+                )
+                {
                     Icon(
                         imageVector = Icons.Default.ExpandMore,
                         contentDescription = "Expandir"
@@ -160,11 +170,11 @@ fun RestaurantCard(restaurant: Restaurant, restaurantScreenViewModel: Restaurant
                     )
                     Text(restaurant.name)
                 }
-                Spacer(modifier=Modifier.height(16.dp))
+                Spacer(modifier=Modifier.height(8.dp))
 
                 Text("Tipo: ${restaurant.type}")
 
-                Spacer(modifier=Modifier.height(16.dp))
+                Spacer(modifier=Modifier.height(8.dp))
 
                 Text("Puntos: ${restaurant.point.toString()}")
 
@@ -172,14 +182,18 @@ fun RestaurantCard(restaurant: Restaurant, restaurantScreenViewModel: Restaurant
                     verticalAlignment = Alignment.CenterVertically){
 
                     Spacer(modifier= Modifier.weight(1f))
-                    IconButton(onClick = {showDialog=true}) {
+                    IconButton(onClick = {
+                        restaurantScreenViewModel.removeProduct(restaurant.id)
+                        showDialog=true},
+                        modifier = Modifier.size(32.dp)) {
                         Icon(
                             tint = colorButton,
                             imageVector = Icons.Default.Delete,
                             contentDescription = "Eliminar"
                         )
                     }
-                    IconButton(onClick = {navController.navigate(Screen.Update.createRoute(restaurant.id)) }) {
+                    IconButton(onClick = {navController.navigate(Screen.Update.createRoute(restaurant.id)) },
+                            modifier = Modifier.size(32.dp)) {
                         Icon(
                             tint = colorButton,
                             imageVector = Icons.Default.Edit,
@@ -192,8 +206,6 @@ fun RestaurantCard(restaurant: Restaurant, restaurantScreenViewModel: Restaurant
         }
     }
 }
-
-
 
 @Preview(showBackground = true)
 @Composable

@@ -88,7 +88,7 @@ class RestaurantRepository(val firestore: FirebaseFirestore) {
 
     suspend fun update(restaurant: Restaurant): Boolean {
         return try {
-            restaurantsCollection.document(restaurant.id.toString()).update(
+            restaurantsCollection.document(restaurant.id).update(
                 "name",restaurant.name,
                 "type",restaurant.type,
                 "points",restaurant.point

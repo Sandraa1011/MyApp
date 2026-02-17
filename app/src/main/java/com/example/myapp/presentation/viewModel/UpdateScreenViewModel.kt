@@ -24,10 +24,13 @@ class UpdateScreenViewModel (
     )
     val restaurant: StateFlow<Restaurant> = _restaurant
 
+    fun setId(id:String){
+        viewModelScope.launch {
+            getRestautantsUseCase(id)?.let {restaurant->
+                _restaurant.value=restaurant
 
-
-    fun setId(id:Long){
-
+            }
+        }
     }
     fun setName(name: String) {
         _restaurant.value = _restaurant.value.copy(name=name)

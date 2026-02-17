@@ -5,7 +5,7 @@ import com.example.myapp.domain.model.Restaurant
 import kotlinx.coroutines.flow.Flow
 
 class GetRestautantsUseCase(private val restaurantRepository: RestaurantRepository) {
-    operator fun invoke(): Flow<List<Restaurant>>{
-        return restaurantRepository.list()
+    suspend operator fun invoke(id:String): Restaurant?{
+        return restaurantRepository.getById(id)
     }
 }
